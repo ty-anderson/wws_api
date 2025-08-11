@@ -20,3 +20,10 @@ build-backend = "uv_build"
 module-name = "wws_api"
 # module root "" = repo root (i.e., not using src/)
 module-root = ""
+
+[[tool.uv.index]]
+name = "testpypi"
+url = "https://test.pypi.org/simple/"
+publish-url = "https://test.pypi.org/legacy/"
+explicit = true
+
