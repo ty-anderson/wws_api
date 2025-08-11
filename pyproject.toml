@@ -1,0 +1,16 @@
+[project]
+name = "wws-api"
+version = "0.1.0"
+description = "Simplifies the process for calling the Workday Web Services API asyncronously."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "aiohttp>=3.12.15",
+    "lxml>=6.0.0",
+    "pyarrow>=21.0.0",
+    "xmltodict>=0.14.2",
+]
+
+[build-system]
+requires = ["uv_build>=0.8.7,<0.9.0"]
+build-backend = "uv_build"
