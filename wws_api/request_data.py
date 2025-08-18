@@ -4,7 +4,7 @@ import aiohttp
 from lxml import etree
 
 
-def request_wws(url, username, password, xml_payload) -> list:
+def request_wws(url, username, password, xml_payload) -> list | bytes:
     """
     Main function to pull data from Workday Web Services API. Requires an XML template that is specific to the API call.
     The ISU account must also be set up to use the specific API. To add a new template to this package,
@@ -24,7 +24,10 @@ def request_wws(url, username, password, xml_payload) -> list:
 
     """
     envelope = create_payload(username=username, password=password, xml_body=xml_payload)
-    return asyncio.run(_generate_requests(url, envelope))
+    if '{ page }' in xml_payload:
+        return asyncio.run(_generate_requests(url, envelope))
+    else:
+        return asyncio.run(_single_request(url, envelope))
 
 
 def create_payload(username: str, password: str, xml_body: str) -> str:
@@ -122,3 +125,9 @@ async def _hit_wws(session: aiohttp.ClientSession, url: str, payload: str):
     """
     async with session.post(url, headers={'Content-Type': 'application/xml'}, data=payload) as resp:
         return await resp.read()
+
+
+async def _single_request(url: str, payload: str):
+    timeout = aiohttp.ClientTimeout(total=8000)
+    async with aiohttp.ClientSession(timeout=timeout) as session:
+        return await _hit_wws(session=session, url=url, payload=payload)
