@@ -442,8 +442,8 @@ wheels = [
 
 [[package]]
 name = "wws-api"
-version = "0.1.0"
-source = { virtual = "." }
+version = "0.2.1"
+source = { editable = "." }
 dependencies = [
     { name = "aiohttp" },
     { name = "lxml" },

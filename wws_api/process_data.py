@@ -139,8 +139,13 @@ def to_pyarrow(responses: list | tuple, start_tag: str, tags: list, allow_collec
         raise ValueError('No responses returned from API')
 
     # CONVERT XML BYTES TO XML TREE AND COMBINE INTO ONE LIST
-    list_of_xml_tree = [etree.fromstring(xml).findall('.//wd:' + start_tag, namespaces={'wd': 'urn:com.workday/bsvc'})
-                        for xml in responses]
+    # add this row 2026-01-09 to handle larger xml responses.
+    BIG_PARSER = etree.XMLParser(huge_tree=True)
+    list_of_xml_tree = [
+        etree.fromstring(xml, BIG_PARSER)
+        .findall('.//wd:' + start_tag, namespaces={'wd': 'urn:com.workday/bsvc'})
+        for xml in responses
+    ]
     xml_list_by_start_tag = [xml for xml_tree in list_of_xml_tree for xml in xml_tree]
 
     # XML PARSING AND EXTRACTION
